@@ -7,8 +7,30 @@ appHelper.runApp(function(app, db) {
 
 	var myName = "Suzanne";
 	app.get("/", function (req, resp) {
-		resp.write("<html><body><h1>Welcome to "+myName+"'s first web app!</body></html>");
-		resp.end();
+    resp.render("index", {"name":myName });
 	});
-
-})
+    
+  app.get("/travel",function(req, resp) {
+    db.findArray({}, function(results) {
+      var params = {
+        "places": results
+      }
+      resp.render("travel", params);
+    });
+  });
+  
+  app.get("/travel/rating/:rating",function(req, resp) {
+    var rating = parseInt(req.params.rating);
+    var params = {
+      "rating" : rating
+    }
+    db.findArray(params, function(results) {
+      var params = {
+        "places": results
+      }
+      resp.render("travel", params);
+    });
+  });
+    
+    
+});
